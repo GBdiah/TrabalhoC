@@ -11,11 +11,19 @@ int mapa[6][6] = {//EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 
     {18,19,20,21,22,23},
     {24,25,26,27,28,29},
     {30,31,32,33,34,35},
-
-
-
 }
+//tem q ajeitar essa porra de logica
+int verificar(int x1, int x2, mapa[6][6]){
+    int linha_ho, linha_ver;
 
+    if (x1 - x2 == %1 ){
+        return linha_ho;}
+    else (x1-x2 == %6){
+        return linha_Ver;
+    }    
+        
+    }
+}
 
 int main()
 {
