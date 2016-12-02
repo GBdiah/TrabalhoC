@@ -22,8 +22,8 @@ int verificar(int x1, int x2, mapa[6][6]){
         return linha_Ver;
     }    
         
-    }
 }
+
 
 int main()
 {
