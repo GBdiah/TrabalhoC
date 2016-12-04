@@ -8,22 +8,22 @@ int player2 = 2;
 
 int jogo_terminado = 0;
 int linhas, colunas;
-char mapa[11][11] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
+// tenta ajeitar isso aq ta dando bug por excesso de elementos!
+char mapa[13][13] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
     //nas colunas é o mesmo porem tendo 6 como resultado necessario para validar a linha
-    {{*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*},
+    {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-    {*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*},
+    {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-    {*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*},
+    {{{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-    {*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*},
+    {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-    {*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*},
+    {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-    {*,' ',*,' ',*,' ',*, ' ',*, ' ',*, ' ',*}};
+    {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"}};
 
-int mapa2[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
-    //nas colunas é o mesmo porem tendo 6 como resultado necessario para validar a linha
+int mapa2[6][6] =
     {{0 ,1, 2, 3,  4,  5},
      {6,7, 8, 9, 10, 11},
     {12,13,14,15,16,17},
