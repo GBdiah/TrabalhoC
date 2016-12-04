@@ -40,11 +40,14 @@ int main()
     printf("------------- JOGADOR [%d] --------------\n",player1);
     printf("Digite o (ponto1,ponto2): ");
     scanf("%d, %d", &ponto1, &ponto2);
-    if ((ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1)){// tava faltando um fucking parenteses 
-        printf ("ok pontos validos");
+    if ((ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1)){
+        printf ("ok linha validos");
+    }
+    if ((ponto1 - ponto2 == 6) || (ponto2 - ponto1 == 6)){
+        printf ("ok coluna valida");
     }
     else {
-        printf ("pontos invalidos");
+        printf ("linha invalida");
     }
 
 
@@ -67,3 +70,4 @@ int main()
 
 }
 }
+
