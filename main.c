@@ -9,7 +9,7 @@ int player2 = 2;
 int jogo_terminado = 0;
 int linhas, colunas;
 // tenta ajeitar isso aq ta dando bug por excesso de elementos!
-char mapa[13][13] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
+char mapa[11][11] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
     //nas colunas é o mesmo porem tendo 6 como resultado necessario para validar a linha
     {{"*",' ',"*",' ',"*",' ',"*", ' ',"*", ' ',"*", ' ',"*"},
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
@@ -44,9 +44,9 @@ int main()
     printf("----------- JOGO DOS PONTINHOS ----------\n\n");
         // imprime os valores do mapa
         int i,j;
-        for (i = 0; i < 6; i++) {
-            for (j = 0; j < 6; j++) {
-                mapa[i][j] = "o --";//comentar de volta depois essa linha
+        for (i = 0; i < 11; i++) {
+            for (j = 0; j < 11; j++) {
+               // mapa[i][j] = "o --";//comentar de volta depois essa linha
                 printf("%c ", mapa[i][j]);
 
         }
