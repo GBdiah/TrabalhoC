@@ -35,17 +35,17 @@ int main()
         }
         printf("\n\n");
     }
-    
     if (vez == 1){
     printf("------------- JOGADOR [%d] --------------\n",player1);
     printf("Digite o (ponto1,ponto2): ");
-    scanf("%d, %d", ponto1, ponto2);
-    if (ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1){//AQUI O PROBLEMA
+    scanf("%d, %d", &ponto1, &ponto2);
+    if (ponto1 - ponto2 == 1){
         printf ("ok pontos validos");
+    }
     else {
         printf ("pontos invalidos");
     }
-    }
+
 
     return 0;
 
