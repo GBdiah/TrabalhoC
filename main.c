@@ -23,10 +23,11 @@ int matriz = {0};
 
 int main()
 {
-
-    while(jogo_terminado == 0) {
     int ponto1, ponto2;
     int vez = 1;
+
+    while(jogo_terminado == 0) {
+
     printf("----------- JOGO DOS PONTINHOS ----------\n\n");
         // imprime os valores do mapa
         int i,j;
@@ -36,38 +37,52 @@ int main()
         }
         printf("\n\n");
     }
-    if (vez == 1){
+    while (vez == 1){
     printf("------------- JOGADOR [%d] --------------\n",player1);
     printf("Digite o (ponto1,ponto2): ");
     scanf("%d, %d", &ponto1, &ponto2);
     if ((ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1)){
-        printf ("ok linha validos");
+        printf ("ok linha valida\n");
+        vez = 2;
+        break;
     }
     if ((ponto1 - ponto2 == 6) || (ponto2 - ponto1 == 6)){
-        printf ("ok coluna valida");
+        printf ("ok coluna valida\n");
+        vez = 2;
+        break;
     }
     else {
-        printf ("linha invalida");
+        printf ("linha invalida\n");
+    }
+
+    }
+    while (vez == 2){
+    printf("------------- JOGADOR [%d] --------------\n",player2);
+    printf("Digite o (ponto1,ponto2): ");
+    scanf("%d, %d", &ponto1, &ponto2);
+    if ((ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1)){
+        printf ("ok linha valida\n");
+        vez = 1;
+        break;
+    }
+    if ((ponto1 - ponto2 == 6) || (ponto2 - ponto1 == 6)){
+        printf ("ok coluna valida\n");
+        vez = 1;
+        break;
+    }
+    else {
+        printf ("linha invalida\n");
     }
 
 
-    return 0;
-
-    if (vez == 2) {
-        printf("------------- JOGADOR [%d] --------------\n",player2);
-    printf("Digite o ponto 1: \n");
-    scanf("%d", ponto1);
-    printf("Digite o ponto 2: \n");
-    scanf("%d", ponto2);
-
-
 
     }
 
 
-}
 
 
+
 }
 }
+
 
