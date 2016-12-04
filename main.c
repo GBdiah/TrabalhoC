@@ -21,13 +21,13 @@ int main()
 {
     while(jogo_terminado == 0) {
     printf("----------- JOGO DOS PONTINHOS ----------\n");
-        int mapa[6][6];
+
         int i,j;
 
         for (i = 0; i < 6; i++) {
             for (j = 0; j < 6; j++) {
-                mapa[i][j] = '.';
-                printf("%c ", mapa[i][j]);
+
+                printf("%d ", mapa[i][j]);
         }
         printf("\n");
     }
