@@ -1,0 +1,155 @@
+#include <stdio.h>
+#include <stdlib.h>
+/* int Mapa1[17][22] ={
+
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3,
+1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+};*/
+void desenharmapa();//para desenhar o mapa não é necessario retornar um valor pode usar void
+
+int Mapa2[17][22] ={
+
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+};
+
+void desenharmapa(){
+	int linha,coluna,i,j;
+
+	for(i=0;i<17;i++){
+		for(j=0;j<22;j++){
+			if(Mapa2[i][j]==1){
+			printf("*");
+			}
+			if(Mapa2[i][j]==0){
+			printf(" ");
+			}
+		}
+		printf("\n");
+	}
+}
+
+
+int hor(int linha,int coluna){
+	//int mapa2[linha][coluna];voce ja declarou uma variavel global que representa o mapa
+
+	if(Mapa2[linha%2==0][coluna%2!=0]==0){
+		printf("-");
+	}
+
+}
+
+int ver(int linha,int coluna){
+
+	//int linha,coluna;
+	//int mapa2[linha][coluna];
+	if(Mapa2[linha%2!=0][coluna%2==0]==0){
+	printf("|");
+	}
+
+	return 0;
+}
+int centro(){
+	int linha,coluna;
+	int mapa2[linha][coluna];
+
+	if(mapa2[linha%2!=0][coluna%2!=0]==0){
+		printf("x");
+	}
+	return 0;
+}
+
+int jogada (int linha,int coluna){
+
+	if((linha%2!=0)&&(coluna%2==0)){
+		hor(linha,coluna);
+	}
+	else if((linha%2==0)&&(coluna%2!=0)){
+		ver(linha,coluna);
+	}
+	else {
+		printf("opcao invalida\n");
+	}
+	return 0;
+}
+
+int main(){
+	int linha,coluna,i,j,cont1,cont2;
+	char k;
+	cont1=0;
+	cont2=0;;
+
+	//int Mapa2[linha][coluna];
+
+	k=' ';//você estava usando k como int e comparando com um caracter no while
+	/*for(i=1;i<=0;i++){
+	printf("\n%d",i);
+	}
+	for(i=1;i<=17;i++){
+	for(j=1;j<=22;j++){
+	printf("\n%d\n",j);
+	}}*/
+
+	while(k==' '){
+
+		desenharmapa();
+
+		printf("jogador 1 digite uma linha: ");
+		scanf("%d",&linha);
+
+		printf("jogador 1 digite uma coluna: ");
+		scanf("%d",&coluna);
+
+		jogada(linha,coluna);
+		cont1++;
+		system("cls");
+
+		desenharmapa();
+
+		printf("jogador 2 digite uma linha: ");
+		scanf("%d",&linha);
+
+		printf("jogador 2 digite uma coluna: ");
+		scanf("%d",&coluna);
+
+		jogada(linha,coluna);
+		cont2++;
+		system("cls");
