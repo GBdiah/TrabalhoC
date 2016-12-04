@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 int jogo_terminado = 0;
-
+int linhas, colunas;
 int mapa[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
     //nas colunas é o mesmo porem tendo 6 como resultado necessario para validar a linha
     {{0, 1 , 2, 3 ,4, 5},
@@ -21,7 +21,17 @@ int main()
 {
     while(jogo_terminado == 0) {
     printf("----------- JOGO DOS PONTINHOS ----------\n");
-    printf("%d\n",mapa[6][6]);
+        int mapa[6][6];
+        int i,j;
+
+        for (i = 0; i < 6; i++) {
+            for (j = 0; j < 6; j++) {
+                mapa[i][j] = '.';
+                printf("%c ", mapa[i][j]);
+        }
+        printf("\n");
+    }
+
     printf("------------- JOGADOR [%d] --------------\n",player1);
     return 0;
     }
