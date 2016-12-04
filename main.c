@@ -17,16 +17,15 @@ int mapa[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2
     {30,31,32,33,34,35}};
 
 
+int matriz = {0};
 
-
-
-int ponto1, ponto2;
-
-int vez = 1;
 
 int main()
 {
+
     while(jogo_terminado == 0) {
+    int ponto1, ponto2;
+    int vez = 1;
     printf("----------- JOGO DOS PONTINHOS ----------\n\n");
         // imprime os valores do mapa
         int i,j;
@@ -36,12 +35,18 @@ int main()
         }
         printf("\n\n");
     }
+    
     if (vez == 1){
     printf("------------- JOGADOR [%d] --------------\n",player1);
-    printf("Digite o ponto 1: \n");
-    scanf("%d", ponto1);
-    printf("Digite o ponto 2: \n");
-    scanf("%d", ponto2);
+    printf("Digite o (ponto1,ponto2): ");
+    scanf("%d, %d", ponto1, ponto2);
+    if (ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1){//AQUI O PROBLEMA
+        printf ("ok pontos validos");
+    else {
+        printf ("pontos invalidos");
+    }
+    }
+
     return 0;
 
     if (vez == 2) {
