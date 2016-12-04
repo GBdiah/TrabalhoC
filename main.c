@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-int jogo_terminado = FALSE;
+int jogo_terminado = 0;
 
 int mapa[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
     //nas colunas é o mesmo porem tendo 6 como resultado necessario para validar a linha
@@ -12,25 +12,17 @@ int mapa[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2
     {24,25,26,27,28,29},
     {30,31,32,33,34,35}};
 
-//tem q ajeitar essa porra de logica
-int verificar(int x1, int x2, mapa[6][6]){
-    int linha_ho, linha_ver;
+int player1 = 1;
+int player2 = 2;
 
-    if (x1 - x2 == %1 ){
-        return linha_ho;}
-    else (x1-x2 == %6){
-        return linha_Ver;
-    }    
-        
-}
 
 
 int main()
 {
-    while(jogo_terminado == FALSE) {
-    printf("----------- JOGO DOS PONTINHOS ----------");
-    printf(mapa);
-    printf("------------- JOGADOR [%d] --------------");
+    while(jogo_terminado == 0) {
+    printf("----------- JOGO DOS PONTINHOS ----------\n");
+    printf("%d\n",mapa[6][6]);
+    printf("------------- JOGADOR [%d] --------------\n",player1);
     return 0;
     }
 }
