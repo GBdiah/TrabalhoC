@@ -5,6 +5,7 @@ int player1 = 1;
 int player2 = 2;
 
 
+
 int jogo_terminado = 0;
 int linhas, colunas;
 int mapa[6][6] = //EX.: 0|-1| = 1 entao é possivel fazer a ligação, 0|-2| = 2 entao nao se pode fazer a ligação
@@ -39,7 +40,7 @@ int main()
     printf("------------- JOGADOR [%d] --------------\n",player1);
     printf("Digite o (ponto1,ponto2): ");
     scanf("%d, %d", &ponto1, &ponto2);
-    if (ponto1 - ponto2 == 1){
+    if ((ponto1 - ponto2 == 1) || (ponto2 - ponto1 == 1)){// tava faltando um fucking parenteses 
         printf ("ok pontos validos");
     }
     else {
