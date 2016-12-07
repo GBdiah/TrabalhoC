@@ -1,229 +1,180 @@
 #include <stdio.h>
-
-#define BOARD_SIDE 6
-
-/*
- * Representa o estado de uma linha do jogo. 
- * Uma linha é a ligação entre dois pontos.
- *
- *   EMPTY: A linha ainda não foi traçada
- *   FULL:  A linha já foi traçada
- */
+#define TAMANHO_MAPA 6
+// ir em projeto >> project build options >> other options e preencher o campo com -std=c99
+//Estado da linha, full ocupado e empty livre
 typedef enum {
     EMPTY, FULL
-} LineState;
+} situacao_linha;
 
 
-/*
- * Representa os pontos do 'tabuleiro'
- * Cada ponto irá saber se a linha da direita e de 
- *     baixo já foi traçada ou não
- * Cada ponto contém o ID do jogador que preencheu o quadrado na sua diagonal inferior-direita
- */
+// sao os pontinhos do tabuleiro
 typedef struct {
-    LineState rightLine, bottomLine;
-    int owner;
-} Dot;
+    situacao_linha linhaDireita, linha_baixo;
+    int dono;
+} Ponto;
 
 
-/*
- * Cria e inicializa os campos de um novo ponto
- */
-Dot createDot() {
-    Dot d;
-    d.rightLine = EMPTY; 
-    d.bottomLine = EMPTY;
-    d.owner = -1;
-    return d; 
+// inicializa os campos de um novo ponto
+Ponto criaPonto() {
+    Ponto d;
+    d.linhaDireita = EMPTY;
+    d.linha_baixo = EMPTY;
+    d.dono = -1;
+    return d;
 }
 
-/*
- * Inicializa os pontos de um 'tabuleiro' quadrado
- *     sideSize - Número de linhas(ou colunas) no tabuleiro
- *     board    - Ponteiro para um array bidimensional de Dot com dimensões sideSize X sideSize
- */
-void initBoard(int sideSize, Dot board[][sideSize]) {
-    for (int i = 0; i < BOARD_SIDE; i++) {
-        for (int j = 0; j < BOARD_SIDE; j++) {
-            board[i][j] = createDot();    
-        }        
-    }    
+//inicia a matriz, nLinhas sendo as linhas e colunas e mapa um array nlinha X nlinhas
+
+void initMatriz(int nLinhas, Ponto mapa[][nLinhas]) {
+    for (int i = 0; i < TAMANHO_MAPA; i++) {
+        for (int j = 0; j < TAMANHO_MAPA; j++) {
+            mapa[i][j] = criaPonto();
+        }
+    }
 }
 
 
-/*
- * Imprime na tela um 'tabuleiro' quadrado
- *     sideSize - Número de linhas(ou colunas) no tabuleiro
- *     board    - Ponteiro para um array bidimensional de Dot com dimensões sideSize X sideSize
- *     scores   - Array com 2 elementos: pontuação do jogador 1 e 2
- */
-void displayBoard(int sideSize, Dot board[][sideSize], int* scores) {
-    printf("\n-------------\n");
-    printf("Jogador 1: %d\n", scores[0]);
-    printf("Jogador 2: %d\n\n", scores[1]);
-    
-    for (int i = 0; i < BOARD_SIDE; i++) {
-        for (int j = 0; j < BOARD_SIDE; j++) {
-            if (board[i][j].rightLine == EMPTY) {
-                printf("o ");
+// faz o print do tabuleiro na tela
+void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
+    printf("========== JOGO DOS PONTINHOS ==========\n\n");
+
+    for (int i = 0; i < TAMANHO_MAPA; i++) {
+        for (int j = 0; j < TAMANHO_MAPA; j++) {
+            if (mapa[i][j].linhaDireita == EMPTY) {
+                printf(". ");
             }
             else {
-                printf("o-");
+                printf("._");
             }
         }
         printf("\n");
-        for (int j = 0; j < BOARD_SIDE; j++) {
-            if (board[i][j].bottomLine == EMPTY) {
+        for (int j = 0; j < TAMANHO_MAPA; j++) {
+            if (mapa[i][j].linha_baixo == EMPTY) {
                 printf("  ");
             }
-            else if (board[i][j].owner == -1) {
+            else if (mapa[i][j].dono == -1) {
                 printf("| ");
             }
             else {
-                printf("|%d", board[i][j].owner + 1);
+                printf("|%d", mapa[i][j].dono + 1);
             }
-        }        
+        }
         printf("\n");
     }
-    printf("\n-------------\n");
+    printf("\n=======================\n");
+    printf("SCORE PLAYER 1: %d\n", scores[0]);
+    printf("SCORE PLAYER 2: %d", scores[1]);
+    printf("\n=======================\n\n");
+
+
 }
 
-/*
- * Verifica se as coordenadas passadas correspondem a um possível traço no tabuleiro
- *     sideSize - Número de linhas(ou colunas) no tabuleiro
- *     board    - Ponteiro para um array bidimensional de Dot com dimensões sideSize X sideSize
- *     x1       - Coordenada X do primeiro ponto
- *     y1       - Coordenada Y do primeiro ponto
- *     x2       - Coordenada X do segundo ponto
- *     y2       - Coordenada Y do segundo ponto
- *
- *     retorno  - 1 caso sim, 0 caso contrário
- */
-int validateCoords(int *x1, int *y1, int *x2, int *y2, int sideSize) {
+// h1 e h2, sao as posicções no eixo X e v1 e v2 no eixo Y
+
+int checarPosicoes(int *h1, int *v1, int *h2, int *v2, int nLinhas) {
     //Checa limites do tabuleiro
-    if (*x1 < 0 || *y1 < 0 || *x2 < 0 || *y2 < 0 ||
-      *x1 >= sideSize || *y1 >= sideSize ||
-      *x2 >= sideSize || *y2 >= sideSize) {
-        return 0; //Pontos fora do limite - COORDENADAS INVÁLIDAS
+    if (*h1 < 0 || *v1 < 0 || *h2 < 0 || *v2 < 0 ||
+      *h1 >= nLinhas || *v1 >= nLinhas ||
+      *h2 >= nLinhas || *v2 >= nLinhas) {
+        return 0;
     }
 
-    // faz com que (x1, y1) seja o elemento mais ao topo e esquerda, 
+    // faz com que (h1, v1) seja o elemento mais ao topo e esquerda,
     // para que se opere apenas sobre ele posteriormente
-    if ((*x1 == *x2 && *y1 > *y2) || (*y1 == *y2 && *x1 > *x2)) {
+    if ((*h1 == *h2 && *v1 > *v2) || (*v1 == *v2 && *h1 > *h2)) {
         int x3, y3; //variaveis auxiliares para fazer a troca;
-        x3 = *x1; y3 = *y1;
-        *x1 = *x2; *y1 = *y2;
-        *x2 = x3; *y2 = y3;
+        x3 = *h1; y3 = *v1;
+        *h1 = *h2; *v1 = *v2;
+        *h2 = x3; *v2 = y3;
     }
 
     //checa se os pontos sao adjacentes
-    if( !( (*x1 == *x2 && *y2-*y1==1 ) || (*y1 == *y2 && *x2 - *x1 == 1 ) ) ) {
+    if( !( (*h1 == *h2 && *v2-*v1==1 ) || (*v1 == *v2 && *h2 - *h1 == 1 ) ) ) {
         return 0; //Pontos não adjacentes - COORDENADAS INVÁLIDAS
     }
 }
 
-/*
- * Verifica se possível e traça uma linha entre dois pontos do tabuleiro
- *     sideSize - Número de linhas(ou colunas) no tabuleiro
- *     board    - Ponteiro para um array bidimensional de Dot com dimensões sideSize X sideSize
- *     x1       - Coordenada X do primeiro ponto
- *     y1       - Coordenada Y do primeiro ponto
- *     x2       - Coordenada X do segundo ponto
- *     y2       - Coordenada Y do segundo ponto
- *
- *     retorno  - 1 caso movimento bem sucedido, 0 caso contrário
- */
-int trace(int sideSize, Dot board[][sideSize], int x1, int y1, int x2, int y2) {
+// verifica se é possivel desenhar uma linha
+int desenhe(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2) {
 
-  if (!validateCoords(&x1, &y1, &x2, &y2, sideSize)) {
-  	  return 0; //Coordenadas inválidas - MOVIMENTO INVÁLIDO
+  if (!checarPosicoes(&h1, &v1, &h2, &v2, nLinhas)) {
+      return 0; //Coordenadas inválidas - MOVIMENTO INVÁLIDO
   }
 
     //se a linha for horizontal
-    if (x1 == x2) {
-        if (board[x1][y1].rightLine == FULL) {
+    if (h1 == h2) {
+        if (mapa[h1][v1].linhaDireita == FULL) {
             return 0; //A linha já estava traçada - MOVIMENTO INVÁLIDO
         }
         else {
-            board[x1][y1].rightLine = FULL; // trace a linha
+            mapa[h1][v1].linhaDireita = FULL; // desenhe a linha
         }
     }
 
     //se a linha for vertical
-    else if (y1 == y2) {
-        if (board[x1][y1].bottomLine == FULL) {
-            return 0; //A linha já estava traçada - MOVIMENTO INVÁLIDO
+    else if (v1 == v2) {
+        if (mapa[h1][v1].linha_baixo == FULL) {
+            return 0; //A linha já estava traçada - MOVIMENTO INVALIDO
         }
         else {
-            board[x1][y1].bottomLine = FULL; // trace a linha
+            mapa[h1][v1].linha_baixo = FULL; // desenhe a linha
         }
     }
     return 1; //MOVIMENTO VÁLIDO
 }
 
-/*
- * Verifica se um traço faz parte de um quadrado (pontuou) ou não
- *     sideSize - Número de linhas(ou colunas) no tabuleiro
- *     board    - Ponteiro para um array bidimensional de Dot com dimensões sideSize X sideSize
- *     x1       - Coordenada X do primeiro ponto
- *     y1       - Coordenada Y do primeiro ponto
- *     x2       - Coordenada X do segundo ponto
- *     y2       - Coordenada Y do segundo ponto
- *     player   - Jogador que efetuou a jogada
- *
- *     retorno  - A pontuação que esse traço gerou (0, 1 ou 2)
- */
-int score(int sideSize, Dot board[][sideSize], int x1, int y1, int x2, int y2, int player) {
+//verifica se fecha um quadrante
+int score(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2, int player) {
   int ret = 0;
 
-  if (!validateCoords(&x1, &y1, &x2, &y2, sideSize)) {
-  	  return 0; //Coordenadas inválidas
+  if (!checarPosicoes(&h1, &v1, &h2, &v2, nLinhas)) {
+      return 0; //Coordenadas inválidas
   }
 
-  if (x1 == x2) { //linha horizontal
+  if (h1 == h2) { //linha horizontal
     //testar caixa abaixo
-      if ( x1 + 1 < sideSize &&
-      	board[x1][y1].owner == -1 && 
-      	board[x1][y1].rightLine == FULL && 
-      	board[x1][y1].bottomLine == FULL &&
-      	board[x2][y2].bottomLine == FULL &&
-      	board[x1 + 1][y1].rightLine == FULL) {
-          board[x1][y1].owner = player;
+      if ( h1 + 1 < nLinhas &&
+        mapa[h1][v1].dono == -1 &&
+        mapa[h1][v1].linhaDireita == FULL &&
+        mapa[h1][v1].linha_baixo == FULL &&
+        mapa[h2][v2].linha_baixo == FULL &&
+        mapa[h1 + 1][v1].linhaDireita == FULL) {
+          mapa[h1][v1].dono = player;
           ret++;
       }
 
       //testar caixa acima
-      if ( x1 - 1 >= 0 &&
-      	board[x1 - 1][y1].owner == -1 &&
-      	board[x1][y1].rightLine == FULL && 
-      	board[x1 - 1][y1].rightLine == FULL && 
-      	board[x1 - 1][y1].bottomLine == FULL && 
-      	board[x2 - 1][y2].bottomLine == FULL) {
-          board[x1 - 1][y1].owner = player;
+      if ( h1 - 1 >= 0 &&
+        mapa[h1 - 1][v1].dono == -1 &&
+        mapa[h1][v1].linhaDireita == FULL &&
+        mapa[h1 - 1][v1].linhaDireita == FULL &&
+        mapa[h1 - 1][v1].linha_baixo == FULL &&
+        mapa[h2 - 1][v2].linha_baixo == FULL) {
+          mapa[h1 - 1][v1].dono = player;
           ret++;
       }
   }
 
-  if (y1 == y2) { //linha horizontal
+  if (v1 == v2) { //linha horizontal
     //testar caixa a direita
-      if ( y1 + 1 < sideSize &&
-      	board[x1][y1].owner == -1 && 
-      	board[x1][y1].rightLine == FULL && 
-      	board[x1][y1].bottomLine == FULL &&
-      	board[x2][y2].rightLine == FULL &&
-      	board[x1][y1 + 1].bottomLine == FULL) {
-          board[x1][y1].owner = player;
+      if ( v1 + 1 < nLinhas &&
+        mapa[h1][v1].dono == -1 &&
+        mapa[h1][v1].linhaDireita == FULL &&
+        mapa[h1][v1].linha_baixo == FULL &&
+        mapa[h2][v2].linhaDireita == FULL &&
+        mapa[h1][v1 + 1].linha_baixo == FULL) {
+          mapa[h1][v1].dono = player;
           ret++;
       }
 
       //testar caixa a esquerda
-      if ( y1 - 1 >= 0 &&
-      	board[x1][y1 - 1].owner == -1 &&
-      	board[x1][y1].bottomLine == FULL && 
-      	board[x1][y1 - 1].rightLine == FULL && 
-      	board[x1][y1 - 1].bottomLine == FULL && 
-      	board[x2][y2 - 1].rightLine == FULL) {
-          board[x1][y1 - 1].owner = player;
+      if ( v1 - 1 >= 0 &&
+        mapa[h1][v1 - 1].dono == -1 &&
+        mapa[h1][v1].linha_baixo == FULL &&
+        mapa[h1][v1 - 1].linhaDireita == FULL &&
+        mapa[h1][v1 - 1].linha_baixo == FULL &&
+        mapa[h2][v2 - 1].linhaDireita == FULL) {
+          mapa[h1][v1 - 1].dono = player;
           ret++;
       }
   }
@@ -233,54 +184,54 @@ int score(int sideSize, Dot board[][sideSize], int x1, int y1, int x2, int y2, i
 
 int main() {
 
-    int currentPlayer = 0;
+    int vezJogador = 0;
     int scores[] = {0, 0};
-    int winner = -1;
+    int ganhador = -1;
     char buffer[100];
     FILE *pFile;
 
 
-    Dot board[BOARD_SIDE][BOARD_SIDE];
+    Ponto mapa[TAMANHO_MAPA][TAMANHO_MAPA];
 
-    initBoard(BOARD_SIDE, board);
+    initMatriz(TAMANHO_MAPA, mapa);
 
-    //Loop do Jogo
-    while(scores[0] + scores[1] < (BOARD_SIDE - 1) * (BOARD_SIDE - 1)) { //Enquanto ainda falatarem caixas vazias
-        int x1, x2, y1, y2;
+    //jogo principal até acabarem as caixas
+    while(scores[0] + scores[1] < (TAMANHO_MAPA - 1) * (TAMANHO_MAPA - 1)) {
+        int h1, h2, v1, v2;
 
-        displayBoard(BOARD_SIDE, board, scores);
-        printf("Jogador %d, digite dois pares de coordenadas (Ex.: 0 0 0 1):\n", currentPlayer + 1);
-        scanf("%d %d %d %d", &x1, &x2, &y1, &y2);
-        if (!trace(BOARD_SIDE, board, x1, x2, y1, y2)) {
-            printf("MOVIMENTO INVALIDO, TENTE NOVAMENTE");
+        desenha_mapa(TAMANHO_MAPA, mapa, scores);
+        printf("Player %d, digite as cordenadas dos dois pontos (X Y X Y):", vezJogador + 1);
+        scanf("%d %d %d %d", &h1, &h2, &v1, &v2);
+        if (!desenhe(TAMANHO_MAPA, mapa, h1, h2, v1, v2)) {
+            printf("\n TENTE DE NOVO, JOGADA INVALIDA\n");
             continue;
-        }  
+        }
         else {
-          int i = score(BOARD_SIDE, board, x1, x2, y1, y2, currentPlayer); 
-            if (!i) { //nao pontuou
-                currentPlayer = (currentPlayer + 1) % 2; //vez do próximo jogador
+          int i = score(TAMANHO_MAPA, mapa, h1, h2, v1, v2, vezJogador);
+            if (!i) { //nao marcou  o ponto
+                vezJogador = (vezJogador + 1) % 2; //outro player
             }
-            else { //pontuou
-  	            printf("JOGADOR %d GANHOU %d PONTOS\n", currentPlayer + 1, i);
-                scores[currentPlayer] += i; //aumentar o score
+            else { //marcou ponto
+                printf("JOGADOR %d GANHOU %d PONTOS\n", vezJogador + 1, i);
+                scores[vezJogador] += i; //aumentar o score
             }
         }
     }
 
     //decidir quem é o vencedor
     if (scores[0] > scores[1]) {
-        winner = 0;
+        ganhador = 0;
     }
     else {
-        winner = 1;
+        ganhador = 1;
     }
 
-    printf("O vencedor e o jogador %d com %d pontos!\n", winner + 1, scores[winner]);
-    displayBoard(BOARD_SIDE, board, scores);
+    printf("Player %d ganhou com %d pontos!\n", ganhador + 1, scores[ganhador]);
+    desenha_mapa(TAMANHO_MAPA, mapa, scores);
 
-    
+
     //requisita o nome do vencedor
-    printf("Digite suas iniciais:\n");
+    printf("Digite um Apelido:\n");
     scanf("%s", buffer);
 
     //salva em arquivo
