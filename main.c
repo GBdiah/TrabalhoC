@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define TAMANHO_MAPA 6
+/*TRABALHO FINAL DE C
+PROFESSOR: THIAGO JACOB
+GRUPO: JOSÉ LUCAS
+GABRIEL DA SILVA COSTA VASCONCELOS DE ARAÚJO/1610013277
+CAIO MARTINS
+HUDSON
+
+*/
 // ir em projeto >> project build options >> other options e preencher o campo com -std=c99
 //Estado da linha, full ocupado e empty livre
 typedef enum {
@@ -76,6 +84,17 @@ void initMatriz(int nLinhas, Ponto mapa[][nLinhas]) {
 // h1 e h2, sao as posicções no eixo X e v1 e v2 no eixo Y
 
 int checarPosicoes(int *h1, int *v1, int *h2, int *v2, int nLinhas) {
+
+    //chega se os pontos sao validos
+    if( !( (*h1 == *h2 && *v2-*v1==1 ) || (*v1 == *v2 && *h2 - *h1 == 1 ) ) ) {
+        return 0;
+    }
+    if ((*h1 == *h2 && *v1 > *v2) || (*v1 == *v2 && *h1 > *h2)) {
+        int x3, y3;
+        x3 = *h1; y3 = *v1;
+        *h1 = *h2; *v1 = *v2;
+        *h2 = x3; *v2 = y3;
+    }
     //Checa limites do tabuleiro
     if (*h1 < 0 || *v1 < 0 || *h2 < 0 || *v2 < 0 ||
       *h1 >= nLinhas || *v1 >= nLinhas ||
@@ -83,17 +102,7 @@ int checarPosicoes(int *h1, int *v1, int *h2, int *v2, int nLinhas) {
         return 0;
     }
 
-    if ((*h1 == *h2 && *v1 > *v2) || (*v1 == *v2 && *h1 > *h2)) {
-        int x3, y3;
-        x3 = *h1; y3 = *v1;
-        *h1 = *h2; *v1 = *v2;
-        *h2 = x3; *v2 = y3;
-    }
 
-    //chega se os pontos sao validos
-    if( !( (*h1 == *h2 && *v2-*v1==1 ) || (*v1 == *v2 && *h2 - *h1 == 1 ) ) ) {
-        return 0; //Pontos não adjacentes - COORDENADAS INVÁLIDAS
-    }
 }
 
 // verifica se a linha existe
