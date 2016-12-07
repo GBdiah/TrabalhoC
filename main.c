@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define TAMANHO_MAPA 6
+#define tamanhoMapa 6
 /*TRABALHO FINAL DE C
 PROFESSOR: THIAGO JACOB
 GRUPO: JOSÉ LUCAS CAVALCANTI QUINHO 1610013520
 GABRIEL DA SILVA COSTA VASCONCELOS DE ARAÚJO/1610013277
 CAIO MARTINS LEMOS DE SOUZA 1610014084
 HUDSON RANGEL AZEVEDO/1410110273
-
 */
 // ir em projeto >> project build options >> other options e preencher o campo com -std=c99
-//Estado da linha, full ocupado e empty livre
+//Estado da linha, off ocupado e on livre
 typedef enum {
-    EMPTY, FULL
+    on, off
 } situacao_linha;
 
 
@@ -26,8 +25,8 @@ typedef struct {
 // inicializa os campos de um novo ponto
 Ponto criaPonto() {
     Ponto d;
-    d.linhaDireita = EMPTY;
-    d.linha_baixo = EMPTY;
+    d.linhaDireita = on;
+    d.linha_baixo = on;
     d.dono = -1;
     return d;
 }
@@ -41,9 +40,9 @@ void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
     printf("========== JOGO DOS PONTINHOS ==========\n\n");
     printf("0 1 2 3 4 5\n\n");
 
-    for (int i = 0; i < TAMANHO_MAPA; i++) {
-        for (int j = 0; j < TAMANHO_MAPA; j++) {
-            if (mapa[i][j].linhaDireita == EMPTY) {
+    for (int i = 0; i < tamanhoMapa; i++) {
+        for (int j = 0; j < tamanhoMapa; j++) {
+            if (mapa[i][j].linhaDireita == on) {
                 printf(". ");
             }
             else {
@@ -51,8 +50,8 @@ void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
             }
         }
         printf("\n");
-        for (int j = 0; j < TAMANHO_MAPA; j++) {
-            if (mapa[i][j].linha_baixo == EMPTY) {
+        for (int j = 0; j < tamanhoMapa; j++) {
+            if (mapa[i][j].linha_baixo == on) {
                 printf("  ");
             }
             else if (mapa[i][j].dono == -1) {
@@ -73,8 +72,8 @@ void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
 }
 
 void initMatriz(int nLinhas, Ponto mapa[][nLinhas]) {
-    for (int i = 0; i < TAMANHO_MAPA; i++) {
-        for (int j = 0; j < TAMANHO_MAPA; j++) {
+    for (int i = 0; i < tamanhoMapa; i++) {
+        for (int j = 0; j < tamanhoMapa; j++) {
             mapa[i][j] = criaPonto();
         }
     }
@@ -114,24 +113,24 @@ int desenhe(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2) 
 
     //se a linha estiver na horizontal
     if (h1 == h2) {
-        if (mapa[h1][v1].linhaDireita == FULL) {
+        if (mapa[h1][v1].linhaDireita == off) {
             return 0;
             //ja tinha linha
         }
         else {
-            mapa[h1][v1].linhaDireita = FULL;
+            mapa[h1][v1].linhaDireita = off;
             // desenha a linha
         }
     }
 
     //se a linha for vertical
     else if (v1 == v2) {
-        if (mapa[h1][v1].linha_baixo == FULL) {
+        if (mapa[h1][v1].linha_baixo == off) {
             return 0;
             //ja tinha linha movimento nao vale
         }
         else {
-            mapa[h1][v1].linha_baixo = FULL; // desenhe a linha
+            mapa[h1][v1].linha_baixo = off; // desenhe a linha
         }
     }
     return 1; //MOVIMENTO VÁLIDO
@@ -149,45 +148,44 @@ int score(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2, in
       //o quadrado de cima
       if ( h1 - 1 >= 0 &&
         mapa[h1 - 1][v1].dono == -1 &&
-        mapa[h1][v1].linhaDireita == FULL &&
-        mapa[h1 - 1][v1].linhaDireita == FULL &&
-        mapa[h1 - 1][v1].linha_baixo == FULL &&
-        mapa[h2 - 1][v2].linha_baixo == FULL) {
+        mapa[h1][v1].linhaDireita == off &&
+        mapa[h1 - 1][v1].linhaDireita == off &&
+        mapa[h1 - 1][v1].linha_baixo == off &&
+        mapa[h2 - 1][v2].linha_baixo == off) {
           mapa[h1 - 1][v1].dono = player;
           ret++;
       }
       //testa o quadrante de baixo
       if ( h1 + 1 < nLinhas &&
         mapa[h1][v1].dono == -1 &&
-        mapa[h1][v1].linhaDireita == FULL &&
-        mapa[h1][v1].linha_baixo == FULL &&
-        mapa[h2][v2].linha_baixo == FULL &&
-        mapa[h1 + 1][v1].linhaDireita == FULL) {
+        mapa[h1][v1].linhaDireita == off &&
+        mapa[h1][v1].linha_baixo == off &&
+        mapa[h2][v2].linha_baixo == off &&
+        mapa[h1 + 1][v1].linhaDireita == off) {
           mapa[h1][v1].dono = player;
           ret++;
       }
   }
 
-  if (v1 == v2) {
-        //linha horizontal
-    //testar caixa a direita
+  if (v1 == v2) {//linha horizontal
+    //testar area direita
       if ( v1 + 1 < nLinhas &&
         mapa[h1][v1].dono == -1 &&
-        mapa[h1][v1].linhaDireita == FULL &&
-        mapa[h1][v1].linha_baixo == FULL &&
-        mapa[h2][v2].linhaDireita == FULL &&
-        mapa[h1][v1 + 1].linha_baixo == FULL) {
+        mapa[h1][v1].linhaDireita == off &&
+        mapa[h1][v1].linha_baixo == off &&
+        mapa[h2][v2].linhaDireita == off &&
+        mapa[h1][v1 + 1].linha_baixo == off) {
           mapa[h1][v1].dono = player;
           ret++;
       }
 
-      //testar caixa a esquerda
+      //testar area esquerda
       if ( v1 - 1 >= 0 &&
         mapa[h1][v1 - 1].dono == -1 &&
-        mapa[h1][v1].linha_baixo == FULL &&
-        mapa[h1][v1 - 1].linhaDireita == FULL &&
-        mapa[h1][v1 - 1].linha_baixo == FULL &&
-        mapa[h2][v2 - 1].linhaDireita == FULL) {
+        mapa[h1][v1].linha_baixo == off &&
+        mapa[h1][v1 - 1].linhaDireita == off &&
+        mapa[h1][v1 - 1].linha_baixo == off &&
+        mapa[h2][v2 - 1].linhaDireita == off) {
           mapa[h1][v1 - 1].dono = player;
           ret++;
       }
@@ -205,23 +203,23 @@ int main() {
     FILE *pFile;
 
 
-    Ponto mapa[TAMANHO_MAPA][TAMANHO_MAPA];
+    Ponto mapa[tamanhoMapa][tamanhoMapa];
 
-    initMatriz(TAMANHO_MAPA, mapa);
+    initMatriz(tamanhoMapa, mapa);
 
     //jogo principal while faz o loop necessario até a partida acabar
-    while(scores[0] + scores[1] < (TAMANHO_MAPA - 1) * (TAMANHO_MAPA - 1)) {
+    while(scores[0] + scores[1] < (tamanhoMapa - 1) * (tamanhoMapa - 1)) {
         int h1, h2, v1, v2;
 
-        desenha_mapa(TAMANHO_MAPA, mapa, scores);
+        desenha_mapa(tamanhoMapa, mapa, scores);
         printf("Player %d, digite as cordenadas dos dois pontos (X Y X Y):", vezJogador + 1);
         scanf("%d %d %d %d", &h1, &h2, &v1, &v2);
-        if (!desenhe(TAMANHO_MAPA, mapa, h1, h2, v1, v2)) {
+        if (!desenhe(tamanhoMapa, mapa, h1, h2, v1, v2)) {
             printf("\n TENTE DE NOVO, JOGADA INVALIDA\n");
             continue;
         }
         else {
-          int i = score(TAMANHO_MAPA, mapa, h1, h2, v1, v2, vezJogador);
+          int i = score(tamanhoMapa, mapa, h1, h2, v1, v2, vezJogador);
             if (!i) { //nao marcou  o ponto
                 vezJogador = (vezJogador + 1) % 2; //outro player
             }
@@ -241,7 +239,7 @@ int main() {
     }
     printf("PARABÉNS !!!!\n");
     printf("Player %d ganhou com %d pontos!\n", ganhador + 1, scores[ganhador]);
-    desenha_mapa(TAMANHO_MAPA, mapa, scores);
+    desenha_mapa(tamanhoMapa, mapa, scores);
 
 
     //requisita o nome do vencedor
