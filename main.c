@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #define TAMANHO_MAPA 6
 // ir em projeto >> project build options >> other options e preencher o campo com -std=c99
 //Estado da linha, full ocupado e empty livre
@@ -25,18 +26,12 @@ Ponto criaPonto() {
 
 //inicia a matriz, nLinhas sendo as linhas e colunas e mapa um array nlinha X nlinhas
 
-void initMatriz(int nLinhas, Ponto mapa[][nLinhas]) {
-    for (int i = 0; i < TAMANHO_MAPA; i++) {
-        for (int j = 0; j < TAMANHO_MAPA; j++) {
-            mapa[i][j] = criaPonto();
-        }
-    }
-}
 
 
 // faz o print do tabuleiro na tela
 void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
     printf("========== JOGO DOS PONTINHOS ==========\n\n");
+    printf("0 1 2 3 4 5\n\n");
 
     for (int i = 0; i < TAMANHO_MAPA; i++) {
         for (int j = 0; j < TAMANHO_MAPA; j++) {
@@ -61,13 +56,22 @@ void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
         }
         printf("\n");
     }
-    printf("\n=======================\n");
-    printf("SCORE PLAYER 1: %d\n", scores[0]);
-    printf("SCORE PLAYER 2: %d", scores[1]);
-    printf("\n=======================\n\n");
+    printf("\n===============================\n");
+    printf("    SCORE PLAYER 1: %d\n", scores[0]);
+    printf("    SCORE PLAYER 2: %d", scores[1]);
+    printf("\n===============================\n\n");
 
 
 }
+
+void initMatriz(int nLinhas, Ponto mapa[][nLinhas]) {
+    for (int i = 0; i < TAMANHO_MAPA; i++) {
+        for (int j = 0; j < TAMANHO_MAPA; j++) {
+            mapa[i][j] = criaPonto();
+        }
+    }
+}
+
 
 // h1 e h2, sao as posicções no eixo X e v1 e v2 no eixo Y
 
@@ -79,42 +83,43 @@ int checarPosicoes(int *h1, int *v1, int *h2, int *v2, int nLinhas) {
         return 0;
     }
 
-    // faz com que (h1, v1) seja o elemento mais ao topo e esquerda,
-    // para que se opere apenas sobre ele posteriormente
     if ((*h1 == *h2 && *v1 > *v2) || (*v1 == *v2 && *h1 > *h2)) {
-        int x3, y3; //variaveis auxiliares para fazer a troca;
+        int x3, y3;
         x3 = *h1; y3 = *v1;
         *h1 = *h2; *v1 = *v2;
         *h2 = x3; *v2 = y3;
     }
 
-    //checa se os pontos sao adjacentes
+    //chega se os pontos sao validos
     if( !( (*h1 == *h2 && *v2-*v1==1 ) || (*v1 == *v2 && *h2 - *h1 == 1 ) ) ) {
         return 0; //Pontos não adjacentes - COORDENADAS INVÁLIDAS
     }
 }
 
-// verifica se é possivel desenhar uma linha
+// verifica se a linha existe
 int desenhe(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2) {
 
   if (!checarPosicoes(&h1, &v1, &h2, &v2, nLinhas)) {
-      return 0; //Coordenadas inválidas - MOVIMENTO INVÁLIDO
+      return 0; // nao vale o movimento, cordenadas erradas
   }
 
-    //se a linha for horizontal
+    //se a linha estiver na horizontal
     if (h1 == h2) {
         if (mapa[h1][v1].linhaDireita == FULL) {
-            return 0; //A linha já estava traçada - MOVIMENTO INVÁLIDO
+            return 0;
+            //ja tinha linha
         }
         else {
-            mapa[h1][v1].linhaDireita = FULL; // desenhe a linha
+            mapa[h1][v1].linhaDireita = FULL;
+            // desenha a linha
         }
     }
 
     //se a linha for vertical
     else if (v1 == v2) {
         if (mapa[h1][v1].linha_baixo == FULL) {
-            return 0; //A linha já estava traçada - MOVIMENTO INVALIDO
+            return 0;
+            //ja tinha linha movimento nao vale
         }
         else {
             mapa[h1][v1].linha_baixo = FULL; // desenhe a linha
@@ -132,18 +137,7 @@ int score(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2, in
   }
 
   if (h1 == h2) { //linha horizontal
-    //testar caixa abaixo
-      if ( h1 + 1 < nLinhas &&
-        mapa[h1][v1].dono == -1 &&
-        mapa[h1][v1].linhaDireita == FULL &&
-        mapa[h1][v1].linha_baixo == FULL &&
-        mapa[h2][v2].linha_baixo == FULL &&
-        mapa[h1 + 1][v1].linhaDireita == FULL) {
-          mapa[h1][v1].dono = player;
-          ret++;
-      }
-
-      //testar caixa acima
+      //o quadrado de cima
       if ( h1 - 1 >= 0 &&
         mapa[h1 - 1][v1].dono == -1 &&
         mapa[h1][v1].linhaDireita == FULL &&
@@ -153,9 +147,20 @@ int score(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2, in
           mapa[h1 - 1][v1].dono = player;
           ret++;
       }
+      //testa o quadrante de baixo
+      if ( h1 + 1 < nLinhas &&
+        mapa[h1][v1].dono == -1 &&
+        mapa[h1][v1].linhaDireita == FULL &&
+        mapa[h1][v1].linha_baixo == FULL &&
+        mapa[h2][v2].linha_baixo == FULL &&
+        mapa[h1 + 1][v1].linhaDireita == FULL) {
+          mapa[h1][v1].dono = player;
+          ret++;
+      }
   }
 
-  if (v1 == v2) { //linha horizontal
+  if (v1 == v2) {
+        //linha horizontal
     //testar caixa a direita
       if ( v1 + 1 < nLinhas &&
         mapa[h1][v1].dono == -1 &&
@@ -183,7 +188,7 @@ int score(int nLinhas, Ponto mapa[][nLinhas], int h1, int v1, int h2, int v2, in
 
 
 int main() {
-
+    // jogo principal
     int vezJogador = 0;
     int scores[] = {0, 0};
     int ganhador = -1;
@@ -195,7 +200,7 @@ int main() {
 
     initMatriz(TAMANHO_MAPA, mapa);
 
-    //jogo principal até acabarem as caixas
+    //jogo principal while faz o loop necessario até a partida acabar
     while(scores[0] + scores[1] < (TAMANHO_MAPA - 1) * (TAMANHO_MAPA - 1)) {
         int h1, h2, v1, v2;
 
@@ -217,15 +222,15 @@ int main() {
             }
         }
     }
+// condição para ganhar a partida
 
-    //decidir quem é o vencedor
-    if (scores[0] > scores[1]) {
+    if (scores[1] < scores[0]) {
         ganhador = 0;
     }
     else {
         ganhador = 1;
     }
-
+    printf("PARABÉNS !!!!\n");
     printf("Player %d ganhou com %d pontos!\n", ganhador + 1, scores[ganhador]);
     desenha_mapa(TAMANHO_MAPA, mapa, scores);
 
@@ -234,8 +239,8 @@ int main() {
     printf("Digite um Apelido:\n");
     scanf("%s", buffer);
 
-    //salva em arquivo
-    pFile = fopen("vencedores.txt", "a");
+    //salva o arquivo
+    pFile = fopen("winners.txt", "a");
     fprintf(pFile, "%s\n", buffer);
     fclose(pFile);
 
