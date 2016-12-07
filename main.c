@@ -37,7 +37,7 @@ Ponto criaPonto() {
 
 // faz o print do tabuleiro na tela
 void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
-    printf("========== JOGO DOS PONTINHOS ==========\n\n");
+    printf("========== JOGO DOS PONTINHOS ==========");
     printf("0 1 2 3 4 5\n\n");
 
     for (int i = 0; i < tamanhoMapa; i++) {
@@ -52,13 +52,13 @@ void desenha_mapa(int nLinhas, Ponto mapa[][nLinhas], int* scores) {
         printf("\n");
         for (int j = 0; j < tamanhoMapa; j++) {
             if (mapa[i][j].linha_baixo == on) {
-                printf("  ");
+                printf("");
             }
             else if (mapa[i][j].dono == -1) {
-                printf("| ");
+                printf(" ");
             }
             else {
-                printf("|%d", mapa[i][j].dono + 1);
+                printf("|%f", mapa[i][j].dono + 1);
             }
         }
         printf("\n");
